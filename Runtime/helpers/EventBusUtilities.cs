@@ -1,15 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using UnityEngine;
-using Utilities.EventBuss.abstractions;
-#if UNITY_EDITOR
+using IKhom.EventBusSystem.Runtime.abstractions;
 using UnityEditor;
-#endif
+using UnityEngine;
 
-namespace Utilities.EventBuss.helpers
+namespace IKhom.EventBusSystem.Runtime.helpers
 {
-    public static class EventBusUtilities
+    internal static class EventBusUtilities
     {
         private static IReadOnlyList<Type> EventType { get; set; }
         private static IReadOnlyList<Type> EventBusTypes { get; set; }
@@ -68,7 +66,7 @@ namespace Utilities.EventBuss.helpers
         /// <summary>
         /// Clears all event buses.
         /// </summary>
-        public static void ClearAllBuses()
+        private static void ClearAllBuses()
         {
             _logger.Log("Clearing all buses...");
 

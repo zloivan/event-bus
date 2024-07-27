@@ -1,7 +1,7 @@
 using System;
-using Utilities.EventBuss.abstractions;
+using IKhom.EventBusSystem.Runtime.abstractions;
 
-namespace Utilities.EventBuss
+namespace IKhom.EventBusSystem.Runtime
 {
     public class EventBinding<T> : IEventBinding<T> where T : IEvent
     {

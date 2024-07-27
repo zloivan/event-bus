@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace Utilities.EventBuss.helpers
+namespace IKhom.EventBusSystem.Runtime.helpers
 {
-    public static class PredefinedAssemblyUtils
+    internal static class PredefinedAssemblyUtils
     {
         private enum AssemblyType
         {

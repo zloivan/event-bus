@@ -1,0 +1,16 @@
+{
+    "name": "IKhom-EventBusSystem-Samples",
+    "rootNamespace": "IKhom",
+    "references": [
+        "IKhom-EventBusSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

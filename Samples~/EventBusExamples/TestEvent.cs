@@ -1,6 +1,6 @@
-using Utilities.EventBuss.abstractions;
+using IKhom.EventBusSystem.Runtime.abstractions;
 
-namespace Utilities.EventBuss.Samples
+namespace IKhom.EventBusSystem.Samples.EventBusExamples
 {
     public struct TestEvent : IEvent
     {

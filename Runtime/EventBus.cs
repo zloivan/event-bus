@@ -1,9 +1,10 @@
 // ReSharper disable StaticMemberInGenericType
-using System.Collections.Generic;
-using Utilities.EventBuss.abstractions;
-using Utilities.EventBuss.helpers;
 
-namespace Utilities.EventBuss
+using System.Collections.Generic;
+using IKhom.EventBusSystem.Runtime.abstractions;
+using IKhom.EventBusSystem.Runtime.helpers;
+
+namespace IKhom.EventBusSystem.Runtime
 {
     public static class EventBus<T> where T : IEvent
     {
@@ -11,7 +12,8 @@ namespace Utilities.EventBuss
         private static readonly ILogger _logger = new EventBusLogger();
         private static readonly object _lock = new();
 
-        //DON'T REMOVE THAT, USED BY REFLECTION
+        
+        // ReSharper disable once UnusedMember.Local
         private static void Clear()
         {
             lock (_lock)

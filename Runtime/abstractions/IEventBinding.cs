@@ -1,6 +1,6 @@
 using System;
 
-namespace Utilities.EventBuss.abstractions
+namespace IKhom.EventBusSystem.Runtime.abstractions
 {
     internal interface IEventBinding<T>
     {

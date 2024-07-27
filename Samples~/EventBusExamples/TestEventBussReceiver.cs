@@ -1,9 +1,9 @@
-using System;
+using IKhom.EventBusSystem.Runtime;
 using UnityEngine;
 
-namespace Utilities.EventBuss.Samples
+namespace IKhom.EventBusSystem.Samples.EventBusExamples
 {
-    public class TestEventBussReciever : MonoBehaviour
+    public class TestEventBussReceiver : MonoBehaviour
     {
         private EventBinding<TestEvent> _testEventBinding;
         private EventBinding<PlayerTestEvent> _playerTestEventBinding;

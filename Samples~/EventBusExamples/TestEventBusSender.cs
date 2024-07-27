@@ -1,7 +1,7 @@
-using System;
+using IKhom.EventBusSystem.Runtime;
 using UnityEngine;
 
-namespace Utilities.EventBuss.Samples
+namespace IKhom.EventBusSystem.Samples.EventBusExamples
 {
     public class TestEventBusSender : MonoBehaviour
     {

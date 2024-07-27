@@ -1,15 +1,15 @@
 using UnityEngine;
 
-namespace Utilities.EventBuss.helpers
+namespace IKhom.EventBusSystem.Runtime.helpers
 {
-    public interface ILogger
+    internal interface ILogger
     {
         public void Log(object message);
         public void LogWarning(object message);
         public void LogError(object message);
     }
 
-    public class EventBusLogger : ILogger
+    internal class EventBusLogger : ILogger
     {
         public void Log(object message)
         {
