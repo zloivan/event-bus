@@ -16,7 +16,7 @@ To install the package, follow these steps:
 1. Open your Unity project.
 2. Open `Window > Package Manager`.
 3. Click on the `+` button in the top left corner and select `Add package from git URL...`.
-4. Enter the following URL: `https://github.com/zloivan/EventBus.git` and click `Add`.
+4. Enter the following URL: `https://github.com/zloivan/event-bus.git` and click `Add`.
 
 ## Usage
 ### Defining Events
