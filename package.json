@@ -1,5 +1,5 @@
 {
-  "name": "com.zloivan.unity-event-bus",
+  "name": "com.zloivan.eventbus",
   "version": "1.0.1",
   "displayName": "IKhom Event Bus",
   "description": "A flexible Event Bus",
