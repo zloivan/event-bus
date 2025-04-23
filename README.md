@@ -1,17 +1,22 @@
 # Event Bus System for Unity
 
 ## Overview
-A lightweight and efficient event bus system for Unity, designed to facilitate communication between different parts of your application.
+
+A lightweight and efficient event bus system for Unity, designed to facilitate communication between different parts of
+your application.
 
 ## Features
+
 - Simple interface for event definition
 - Flexible event binding
 - Event caching for accessing last triggered event
+- Async support with Task and UniTask integration
 - Comprehensive logging
 - Editor integration for automatic cleanup
 - Examples included for quick start
 
 ## Installation
+
 To install the package, follow these steps:
 
 1. Open your Unity project.
@@ -20,7 +25,9 @@ To install the package, follow these steps:
 4. Enter the following URL: `https://github.com/zloivan/event-bus.git` and click `Add`.
 
 ## Usage
+
 ### Defining Events
+
 Define your events by implementing the `IEvent` interface. Can be **struct** or **class**.
 
 ```csharp
@@ -32,12 +39,17 @@ public struct PlayerUpdatedEvent : IEvent
     public string Name;
 }
 ```
+
 ### Raising Events
+
 Use the `EventBus<T>.Raise` method to raise events.
+
 ```csharp
 EventBus<PlayerUpdatedEvent>.Raise(new PlayerUpdatedEvent { Health = 100, Name = "Player1" });
 ```
+
 ### Handling Events
+
 Register and handle events in your scripts.
 
 ```csharp
@@ -73,6 +85,7 @@ public class EventReceiver : MonoBehaviour
 ```
 
 ### Event Caching
+
 You can access the most recently triggered event using the event cache:
 
 ```csharp
@@ -92,11 +105,39 @@ bool wasTriggered = EventBus<PlayerUpdatedEvent>.HasLastEvent();
 EventBus<PlayerUpdatedEvent>.ClearLastEvent();
 ```
 
+### Async Event Handling
+
+You can wait for events asynchronously:
+
+```csharp
+// Wait for an event using Task
+PlayerUpdatedEvent playerEvent = await EventBus<PlayerUpdatedEvent>.WaitForEventAsync();
+
+// Wait with timeout
+try 
+{
+    PlayerUpdatedEvent playerEvent = await EventBus<PlayerUpdatedEvent>.WaitForEventAsync(
+        TimeSpan.FromSeconds(5));
+    // Handle the event
+}
+catch (TimeoutException) 
+{
+    Debug.Log("Timed out waiting for player update");
+}
+
+// If UniTask is available in your project:
+PlayerUpdatedEvent playerEvent = await EventBus<PlayerUpdatedEvent>.WaitForEventUniTaskAsync();
+```
+
 ### Automatic Binding
-Binding is done via reflection and taken from assemblies, so no additional binding is required. The `EventBusUtilities` class ensures all event types are initialized automatically.
+
+Binding is done via reflection and taken from assemblies, so no additional binding is required. The `EventBusUtilities`
+class ensures all event types are initialized automatically.
 
 ### Debug Logs
+
 To enable debug logs, add new item to scripting define symbols `DEBUG_EVENT_BUS`
 
 ### Contributing
+
 Contributions are welcome! Please submit a pull request or open an issue to discuss changes.
