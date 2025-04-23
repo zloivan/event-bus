@@ -48,6 +48,34 @@ namespace IKhom.EventBusSystem.Samples.EventBusExamples
             {
                 RaiseTestEvent();
             }
+            
+            // Add a section to demonstrate event caching functionality
+            GUILayout.Space(20);
+            GUILayout.Label("Event Caching Demo", GUI.skin.box);
+            
+            if (GUILayout.Button("Get Last Player Event"))
+            {
+                if (EventBus<PlayerTestEvent>.TryGetLastEvent(out var lastEvent))
+                {
+                    Debug.Log($"Last cached PlayerTestEvent: Name = {lastEvent.Name}, Health = {lastEvent.Health}");
+                }
+                else
+                {
+                    Debug.Log("No PlayerTestEvent has been cached yet");
+                }
+            }
+            
+            if (GUILayout.Button("Check Has Event"))
+            {
+                bool hasEvent = EventBus<PlayerTestEvent>.HasLastEvent();
+                Debug.Log($"Has cached PlayerTestEvent: {hasEvent}");
+            }
+            
+            if (GUILayout.Button("Clear Event Cache"))
+            {
+                EventBus<PlayerTestEvent>.ClearLastEvent();
+                Debug.Log("PlayerTestEvent cache cleared");
+            }
 
             GUILayout.EndVertical();
             GUILayout.EndArea();

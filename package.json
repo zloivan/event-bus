@@ -1,15 +1,15 @@
 {
   "name": "com.zloivan.eventbus",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "displayName": "IKhom Event Bus",
-  "description": "A flexible Event Bus",
+  "description": "A flexible Event Bus with event caching support",
   "unity": "2019.1",
   "keywords": [
     "unity",
     "event bus"
   ],
   "_upm": {
-    "changelog": "- Adjusted namespaces and assemblies"
+    "changelog": "- Added event caching system to store and retrieve the last triggered event"
   },
   "author": {
     "name": "Ivan Khomichkov",

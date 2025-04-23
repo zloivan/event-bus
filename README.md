@@ -6,6 +6,7 @@ A lightweight and efficient event bus system for Unity, designed to facilitate c
 ## Features
 - Simple interface for event definition
 - Flexible event binding
+- Event caching for accessing last triggered event
 - Comprehensive logging
 - Editor integration for automatic cleanup
 - Examples included for quick start
@@ -34,7 +35,7 @@ public struct PlayerUpdatedEvent : IEvent
 ### Raising Events
 Use the `EventBus<T>.Raise` method to raise events.
 ```csharp
-EventBus<PlayerTestEvent>.Raise(new PlayerUpdatedEvent { Health = 100, Name = "Player1" });
+EventBus<PlayerUpdatedEvent>.Raise(new PlayerUpdatedEvent { Health = 100, Name = "Player1" });
 ```
 ### Handling Events
 Register and handle events in your scripts.
@@ -42,34 +43,53 @@ Register and handle events in your scripts.
 ```csharp
 public class EventReceiver : MonoBehaviour
 {
-    private EventBinding<PlayerUpdatedEvent> _playerUpdatedEvent;
+    private EventBinding<PlayerUpdatedEvent> _playerUpdatedEventBinding;
 
     private void OnEnable()
     {
-        _playerUpdatedEvent = new EventBinding<PlayerUpdatedEvent>(HandlePlayerTestEvent);
+        _playerUpdatedEventBinding = new EventBinding<PlayerUpdatedEvent>(HandlePlayerUpdateEvent);
 
-        EventBus<PlayerUpdatedEvent>.Register(_playerTestEventBinding);
+        EventBus<PlayerUpdatedEvent>.Register(_playerUpdatedEventBinding);
         
         //Can add additional handlers to bindings
-        _playerUpdatedEvent.Add(AdditionalTestEventHandler);
+        _playerUpdatedEventBinding.Add(AdditionalUpdateEventHandler);
     }
 
     private void OnDisable()
     {
-        EventBus<PlayerUpdatedEvent>.Deregister(_playerTestEventBinding);
+        EventBus<PlayerUpdatedEvent>.Deregister(_playerUpdatedEventBinding);
     }
 
-    private void HandlePlayerTestEvent(PlayerTestEvent playerTestEvent)
+    private void HandlePlayerUpdateEvent(PlayerUpdatedEvent playerUpdatedEvent)
     {
-        Debug.Log($"Received PlayerUpdatedEvent: Name = {playerTestEvent.Name}, Health = {playerTestEvent.Health}");
+        Debug.Log($"Received PlayerUpdatedEvent: Name = {playerUpdatedEvent.Name}, Health = {playerUpdatedEvent.Health}");
     }
     
-    private void AdditionalTestEventHandler(PlayerTestEvent playerTestEvent)
+    private void AdditionalUpdateEventHandler(PlayerUpdatedEvent playerUpdatedEvent)
     {
         Debug.Log("Handlers can be added after the registration of binder");
     }
 }
+```
 
+### Event Caching
+You can access the most recently triggered event using the event cache:
+
+```csharp
+// Check if an event has been raised and get it
+if (EventBus<PlayerUpdatedEvent>.TryGetLastEvent(out var lastEvent))
+{
+    Debug.Log($"Last player update: {lastEvent.Name}, Health = {lastEvent.Health}");
+}
+
+// Get the last event directly (will be default/null if none was triggered)
+var lastEvent = EventBus<PlayerUpdatedEvent>.GetLastEvent();
+
+// Check if an event has been triggered
+bool wasTriggered = EventBus<PlayerUpdatedEvent>.HasLastEvent();
+
+// Clear the cached event if needed
+EventBus<PlayerUpdatedEvent>.ClearLastEvent();
 ```
 
 ### Automatic Binding
