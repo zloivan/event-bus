@@ -247,5 +247,6 @@ namespace IKhom.EventBusSystem.Runtime
                 throw new TimeoutException($"Timeout waiting for {typeof(T).Name} event");
             }
         }
+
     }
 }

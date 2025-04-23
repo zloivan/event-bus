@@ -20,6 +20,9 @@ namespace IKhom.EventBusSystem.Samples.EventBusExamples
             _testEventBinding = new EventBinding<TestEvent>(HandleTestEvent);
             _playerTestEventBinding = new EventBinding<PlayerTestEvent>(HandlePlayerTestEvent);
 
+            //Action handler;
+            //HandlePlayerTestEvent.RegisterHandler<PlayerTestEvent>();
+            //EventBus<TestEvent>.Register();
             EventBus<TestEvent>.Register(_testEventBinding);
             EventBus<PlayerTestEvent>.Register(_playerTestEventBinding);
 
