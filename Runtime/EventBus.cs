@@ -1,7 +1,15 @@
+using System;
 using System.Collections.Generic;
+using System.Threading;
 using IKhom.EventBusSystem.Runtime.abstractions;
 using IKhom.EventBusSystem.Runtime.helpers;
 using JetBrains.Annotations;
+using ILogger = IKhom.EventBusSystem.Runtime.helpers.ILogger;
+using System.Threading.Tasks;
+#if UNITASK_SUPPORT
+using Cysharp.Threading.Tasks;
+
+#endif
 
 namespace IKhom.EventBusSystem.Runtime
 {
@@ -133,6 +141,110 @@ namespace IKhom.EventBusSystem.Runtime
                 _lastEvent = default;
                 _hasLastEvent = false;
                 _logger.Log($"Cleared last event for {typeof(T).Name}");
+            }
+        }
+
+
+#if UNITASK_SUPPORT
+        /// <summary>
+        /// Waits asynchronously for an event of this type to be raised using UniTask.
+        /// </summary>
+        /// <param name="cancellationToken">Optional cancellation token to cancel the operation.</param>
+        /// <returns>A UniTask that completes with the raised event.</returns>
+        [PublicAPI]
+        public static UniTask<T> WaitForEventUniTaskAsync(CancellationToken cancellationToken = default)
+        {
+            var source = new UniTaskCompletionSource<T>();
+            EventBinding<T> binding = null;
+
+            binding = new EventBinding<T>(e =>
+            {
+                Deregister(binding);
+                source.TrySetResult(e);
+            });
+
+            Register(binding);
+
+            cancellationToken.Register(() =>
+            {
+                Deregister(binding);
+                source.TrySetCanceled(cancellationToken);
+            });
+
+            return source.Task;
+        }
+
+        /// <summary>
+        /// Waits asynchronously for an event of this type to be raised using UniTask, with a timeout.
+        /// </summary>
+        /// <param name="timeout">The maximum time to wait for the event.</param>
+        /// <param name="cancellationToken">Optional cancellation token to cancel the operation.</param>
+        /// <returns>A UniTask that completes with the raised event, or throws TimeoutException if the timeout elapses.</returns>
+        [PublicAPI]
+        public static async UniTask<T> WaitForEventUniTaskAsync(TimeSpan timeout,
+            CancellationToken cancellationToken = default)
+        {
+            var timeoutTask = UniTask.Delay(timeout, cancellationToken: cancellationToken);
+            var eventTask = WaitForEventUniTaskAsync(cancellationToken);
+
+            var (hasValue, value) = await UniTask.WhenAny(eventTask, timeoutTask);
+
+            if (hasValue)
+            {
+                return value;
+            }
+
+            throw new TimeoutException($"Timeout waiting for {typeof(T).Name} event");
+        }
+
+#endif
+        /// <summary>
+        /// Waits asynchronously for an event of this type to be raised.
+        /// </summary>
+        /// <param name="cancellationToken">Optional cancellation token to cancel the operation.</param>
+        /// <returns>A task that completes with the raised event.</returns>
+        [PublicAPI]
+        public static Task<T> WaitForEventAsync(CancellationToken cancellationToken = default)
+        {
+            var tcs = new TaskCompletionSource<T>();
+            EventBinding<T> binding = null;
+
+            binding = new EventBinding<T>(e =>
+            {
+                Deregister(binding);
+                tcs.TrySetResult(e);
+            });
+
+            Register(binding);
+
+            cancellationToken.Register(() =>
+            {
+                Deregister(binding);
+                tcs.TrySetCanceled(cancellationToken);
+            });
+
+            return tcs.Task;
+        }
+
+        /// <summary>
+        /// Waits asynchronously for an event of this type to be raised, with a timeout.
+        /// </summary>
+        /// <param name="timeout">The maximum time to wait for the event.</param>
+        /// <param name="cancellationToken">Optional cancellation token to cancel the operation.</param>
+        /// <returns>A task that completes with the raised event, or throws TimeoutException if the timeout elapses.</returns>
+        [PublicAPI]
+        public static async Task<T> WaitForEventAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
+        {
+            using var timeoutCts = new CancellationTokenSource(timeout);
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(timeoutCts.Token, cancellationToken);
+
+            try
+            {
+                return await WaitForEventAsync(linkedCts.Token);
+            }
+            catch (OperationCanceledException) when (timeoutCts.Token.IsCancellationRequested)
+            {
+                throw new TimeoutException($"Timeout waiting for {typeof(T).Name} event");
             }
         }
     }

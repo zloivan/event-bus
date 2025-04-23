@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using IKhom.EventBusSystem.Runtime;
 using UnityEngine;
 
@@ -77,8 +78,27 @@ namespace IKhom.EventBusSystem.Samples.EventBusExamples
                 Debug.Log("PlayerTestEvent cache cleared");
             }
 
+            if (GUILayout.Button("Trigger Async Event Sequence"))
+            {
+                TriggerEventSequenceAsync();
+            }
+            
             GUILayout.EndVertical();
             GUILayout.EndArea();
+        }
+        
+        public async void TriggerEventSequenceAsync()
+        {
+            // Raise a test event
+            RaiseTestEvent();
+    
+            // Wait 2 seconds
+            await Task.Delay(2000);
+    
+            // Then raise a player event
+            RaisePlayerTestEvent();
+    
+            Debug.Log("Async event sequence completed");
         }
     }
 }

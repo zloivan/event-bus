@@ -1,7 +1,7 @@
 {
     "name": "IKhom-EventBusSystem",
     "rootNamespace": "IKhom",
-    "references": [],
+    "references": ["UniTask"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
@@ -9,6 +9,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.cysharp.unitask",
+            "expression": "",
+            "define": "UNITASK_SUPPORT"
+        }
+    ],
     "noEngineReferences": false
 }
