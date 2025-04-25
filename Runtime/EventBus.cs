@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using IKhom.EventBusSystem.Runtime.abstractions;
 using IKhom.EventBusSystem.Runtime.helpers;
@@ -76,6 +77,7 @@ namespace IKhom.EventBusSystem.Runtime
         /// <param name="event">The event to raise.</param>
         [PublicAPI] public static void Raise(T @event)
         {
+            IEventBinding<T>[] bindingsCopy;
             lock (_lock)
             {
                 _logger.Log($"Raising event for {typeof(T).Name} with {_bindings.Count} bindings");
@@ -83,11 +85,15 @@ namespace IKhom.EventBusSystem.Runtime
                 _lastEvent = @event;
                 _hasLastEvent = true;
 
-                foreach (var binding in _bindings)
-                {
-                    binding.OnEvent?.Invoke(@event);
-                    binding.OnEventNoArgs?.Invoke();
-                }
+                // Создаем копию коллекции для безопасного перебора
+                bindingsCopy = _bindings.ToArray();
+            }
+
+            // Перебираем копию вне блокировки
+            foreach (var binding in bindingsCopy)
+            {
+                binding.OnEvent?.Invoke(@event);
+                binding.OnEventNoArgs?.Invoke();
             }
         }
 
